@@ -1,4 +1,3 @@
-// src/components/VideoPlayer.jsx
 import React, { useContext, useRef, useEffect } from 'react';
 import { VideoContext } from '../contexts/VideoContext';
 import Controls from './Controls';
@@ -106,6 +105,22 @@ const VideoPlayer = () => {
     };
   }, [currentVideo, playlist, setCurrentTime, setDuration, setIsPlaying, setCurrentVideo]);
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const fileURL = URL.createObjectURL(file);
+      setCurrentVideo({
+        id: 'custom',
+        title: file.name,
+        src: fileURL,
+        poster: '',
+        subtitles: '',
+        qualityOptions: [],
+      });
+      setIsPlaying(true);
+    }
+  };
+
   return (
     <div className="relative">
       <video
@@ -127,6 +142,9 @@ const VideoPlayer = () => {
         {/* 可以在这里添加更多 <track> 用于多语言字幕 */}
       </video>
       <Controls videoRef={videoRef} />
+      <div className="mt-4">
+        <input type="file" accept="video/*" onChange={handleFileChange} />
+      </div>
     </div>
   );
 };

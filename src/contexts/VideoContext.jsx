@@ -1,4 +1,3 @@
-// src/contexts/VideoContext.jsx
 import React, { createContext, useState, useEffect } from 'react';
 
 export const VideoContext = createContext();
@@ -35,6 +34,7 @@ export const VideoProvider = ({ children }) => {
   const [playbackHistory, setPlaybackHistory] = useState({});
   const [bookmarks, setBookmarks] = useState({});
   const [selectedSubtitle, setSelectedSubtitle] = useState('off');
+  const [selectedVideo, setSelectedVideo] = useState(null); // Pbab5
 
   // 播放历史从 LocalStorage 加载
   useEffect(() => {
@@ -60,13 +60,20 @@ export const VideoProvider = ({ children }) => {
     localStorage.setItem(`video-${currentVideo.id}-bookmarks`, JSON.stringify(bookmarks));
   }, [bookmarks, currentVideo.id]);
 
+  const handleSetCurrentVideo = (video) => {
+    if (video.id === 'custom') {
+      setSelectedVideo(video);
+    }
+    setCurrentVideo(video);
+  };
+
   return (
     <VideoContext.Provider
       value={{
         playlist,
         setPlaylist,
         currentVideo,
-        setCurrentVideo,
+        setCurrentVideo: handleSetCurrentVideo,
         isPlaying,
         setIsPlaying,
         volume,
@@ -87,6 +94,8 @@ export const VideoProvider = ({ children }) => {
         setBookmarks,
         selectedSubtitle,
         setSelectedSubtitle,
+        selectedVideo,
+        setSelectedVideo,
       }}
     >
       {children}
